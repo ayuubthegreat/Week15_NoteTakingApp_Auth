@@ -58,39 +58,34 @@ const Navbar = () => {
                   <List size={18} />
                   <span>View All</span>
                 </Link>
-
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-1 px-3 py-2 rounded-md transition-colors hover:bg-gray-100 text-gray-700"
-                >
-                  <LogOut size={18} />
-                  <span>Logout</span>
-                </button>
- 
-      
-                <Link
-                  to="/login"
-                  className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${
-                    pathname === "/login"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "hover:bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  <LogIn size={18} />
-                  <span>Login</span>
-                </Link>
-
-                <Link
-                  to="/register"
-                  className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${
-                    pathname === "/register"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "hover:bg-gray-100 text-gray-700"
-                  }`}
-                >
+                {!isAuthenticated && (
+                <><Link
+                to="/login"
+                className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${pathname === "/login"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "hover:bg-gray-100 text-gray-700"}`}
+              ><LogIn size={18} />
+                <span>Login</span>
+              </Link><Link
+                to="/register"
+                className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${pathname === "/register"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "hover:bg-gray-100 text-gray-700"}`}
+              >
                   <UserPlus size={18} />
                   <span>Register</span>
-                </Link>
+                </Link></>
+                )}
+                {isAuthenticated && (
+                  <><button
+                onClick={handleLogout}
+                className="flex items-center gap-1 px-3 py-2 rounded-md transition-colors hover:bg-gray-100 text-gray-700"
+              >
+                <LogOut size={18} />
+                <span>Logout</span>
+              </button></>
+                  
+                  )}
      
           </div>
         </nav>

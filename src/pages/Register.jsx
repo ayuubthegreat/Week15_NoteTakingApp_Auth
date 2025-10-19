@@ -1,4 +1,43 @@
+import { login, register as regista } from "../store/slices/authSlice";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { registerSchema } from "../schema/authSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { data } from "autoprefixer";
+
+
+
 const Register = () => {
+  const [isSubmitting, setSubmit] = useState(false);
+  const nav = useNavigate();
+  const dptch = useDispatch();
+  const {register,
+     handleSubmit, 
+     reset, 
+     formState:{errors},} = useForm({
+      resolver: zodResolver(registerSchema), 
+      defaultValues: {
+        email: "",
+        password: "",
+        confirmPassword: ""
+      },
+     });
+  const onSend = async(data) => {
+    setSubmit(true)
+    try {
+      await dptch(regista(data)).unwrap();
+      console.log("Registration successful. Welcome aboard.")
+      reset();
+      setSubmit(false);
+      setTimeout(() => {
+        nav("/notes")
+      }, 300)
+    } catch(error){
+      console.log("Uh oh....something went wrong. Here's the error:", error);
+    }
+  }
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -6,7 +45,7 @@ const Register = () => {
           Create an Account
         </h2>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit(async (data) => { await onSend(data)})}>
           <div>
             <label
               htmlFor="email"
@@ -19,8 +58,11 @@ const Register = () => {
               id="email"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               placeholder="Enter your email"
+              {...register("email")}
             />
+            
           </div>
+          {errors.email && (<p className="text-red-500 text-sm mt-1">{errors.email.message}</p>)}
 
           <div>
             <label
@@ -34,8 +76,11 @@ const Register = () => {
               id="password"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               placeholder="Enter your password"
+              {...register("password")}
             />
+            
           </div>
+          {errors.password && (<p className="text-red-500 text-sm mt-1">{errors.password.message}</p>)}
 
           <div>
             <label
@@ -49,8 +94,11 @@ const Register = () => {
               id="confirmPassword"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               placeholder="Confirm your password"
+              {...register("confirmPassword")}
             />
+            
           </div>
+          {errors.confirmPassword && (<p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>)}
 
           <button
             type="submit"
